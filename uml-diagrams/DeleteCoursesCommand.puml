@@ -1,0 +1,34 @@
+@startuml
+hide footbox
+
+actor User
+participant ":DeleteCoursesCommand" as DeleteCoursesCommand
+participant ":Integer" as Integer
+participant ":Storage" as Storage
+
+User -> DeleteCoursesCommand: execute (userInput:String)
+activate DeleteCoursesCommand
+
+DeleteCoursesCommand -> DeleteCoursesCommand: parseDeleteCommand(userInput: String)
+activate DeleteCoursesCommand
+return descriptionSubstrings : String[]
+
+DeleteCoursesCommand -> DeleteCoursesCommand: deleteCourses(descriptionSubstrings : String[], Storage storage)
+activate DeleteCoursesCommand
+
+DeleteCoursesCommand -> Integer: parseInt(descriptionSubstrings[1] : String)
+activate Integer
+return listIndex : int
+
+DeleteCoursesCommand -> Storage: getCourse(listIndex : int)
+Storage --> DeleteCoursesCommand: courseToDelete : Delete
+DeleteCoursesCommand -> Storage: deleteCourse(listIndex : int)
+
+DeleteCoursesCommand -> Storage: getCourse(listIndex : int)
+
+DeleteCoursesCommand --> DeleteCoursesCommand
+deactivate DeleteCoursesCommand
+
+DeleteCoursesCommand --> User
+deactivate DeleteCoursesCommand
+@enduml
